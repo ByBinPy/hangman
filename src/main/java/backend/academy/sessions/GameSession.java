@@ -7,21 +7,26 @@ import backend.academy.states.State;
 import backend.academy.states.StateBegin;
 import backend.academy.states.StateContinue;
 import backend.academy.states.StateEnd;
+import backend.academy.states.StateInit;
+import javax.print.DocFlavor;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 public class GameSession implements Session {
     private String _word;
     private Set<Character> _chars;
-    private State _state;
+    private State _state = new StateInit(0, "", Level.EASY, "");
     private final GuessService _guessService = new GuessService();
 
+    public State getCurrentState() {
+        return _state;
+    }
     @Override
     public State start() throws UnimplementedLevelException {
         Level defaultLevel = Level.EASY;
         _word = _guessService.getRandomWordWithLevel(defaultLevel);
         _chars = _word.chars().mapToObj(ch -> (char) ch).collect(Collectors.toSet());
-        _state = new StateBegin(0, "_ ".repeat(_word.length()), defaultLevel);
+        _state = new StateBegin(0, "_ ".repeat(_word.length()), defaultLevel, "-".repeat(10));
         return _state;
     }
 
@@ -29,7 +34,7 @@ public class GameSession implements Session {
     public State start(Level level) throws UnimplementedLevelException {
         _word = _guessService.getRandomWordWithLevel(level);
         _chars = _word.chars().mapToObj(ch -> (char) ch).collect(Collectors.toSet());
-        _state = new StateBegin(0, "_ ".repeat(_word.length()), level);
+        _state = new StateBegin(0, "_ ".repeat(_word.length()), level, "-".repeat(10));
         return _state;
     }
 
