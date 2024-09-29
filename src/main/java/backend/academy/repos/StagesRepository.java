@@ -11,7 +11,7 @@ public class StagesRepository {
             |
             |
             |
-            |     |||||
+            |
             |_________
             """);
 
@@ -21,7 +21,7 @@ public class StagesRepository {
             |       O
             |
             |
-            |     |||||
+            |
             |_________
             """);
 
@@ -31,7 +31,7 @@ public class StagesRepository {
             |       O
             |       |
             |
-            |     |||||
+            |
             |_________
             """);
 
@@ -41,17 +41,7 @@ public class StagesRepository {
             |       O
             |      /|
             |
-            |     |||||
-            |_________
-            """);
-
-        add("""
-            _________
-            |       |
-            |       O
-            |      /|\
             |
-            |     |||||
             |_________
             """);
 
@@ -59,9 +49,19 @@ public class StagesRepository {
             _________
             |       |
             |       O
-            |      /|\
+            |      /|\\
+            |
+            |
+            |_________
+            """);
+
+        add("""
+            _________
+            |       |
+            |       O
+            |      /|\\
             |      /
-            |     |||||
+            |
             |_________
             """);
 
@@ -69,19 +69,9 @@ public class StagesRepository {
             _________
             |       |
             |       O
-            |      /|\
-            |      / \
-            |     |||||
-            |_________
-            """);
-
-        add("""
-            _________
-            |       |
-            |       O
-            |     --|--
-            |      / \
-            |     |||||
+            |      /|\\
+            |      / \\
+            |
             |_________
             """);
 
@@ -90,8 +80,8 @@ public class StagesRepository {
             |       |
             |       O
             |     --|--
-            |      / \
-            |     |||||
+            |      / \\
+            |
             |_________
             """);
 
@@ -100,7 +90,17 @@ public class StagesRepository {
             |       |
             |       O
             |     --|--
-            |      / \
+            |      / \\
+            |
+            |_________
+            """);
+
+        add("""
+            _________
+            |       |
+            |       O
+            |     --|--
+            |      / \\
             |_________
             """);
 
@@ -110,7 +110,7 @@ public class StagesRepository {
             |       |
             |       O
             |     --|--
-            |      / \
+            |      / \\
             |_________
             """);
 
@@ -120,13 +120,18 @@ public class StagesRepository {
             |       |
             |     (X X)
             |     --|--
-            |      / \
+            |      / \\
             |_________
             """);
     }};
+
     public String getStage(Integer numberOfStage) {
+        if (numberOfStage >= _stages.size()) {
+            return _stages.get(_stages.size() - 1);  // исправлено для получения последней сцены
+        }
         return _stages.get(numberOfStage);
     }
+
     public Integer getCountStages() {
         return _stages.size();
     }

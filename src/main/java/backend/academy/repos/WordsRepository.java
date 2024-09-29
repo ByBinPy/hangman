@@ -103,7 +103,9 @@ public class WordsRepository {
     public Set<String> getWords() {
         return _words.keySet();
     }
-
+    public String getCategory(String word) {
+        return _words.get(word);
+    }
     public void addWord(String word, String category) {
         _words.put(word, category);
     }

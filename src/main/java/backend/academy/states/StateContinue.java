@@ -1,6 +1,7 @@
 package backend.academy.states;
 
-public record StateContinue(Integer deathScore, String imageOfHangman, String currencyWord, Level level)
+public record StateContinue(Integer deathScore, String imageOfHangman, String currencyWord, Level level,
+                            Integer maxScore)
     implements State {
     @Override
     public String getState() {
@@ -11,7 +12,9 @@ public record StateContinue(Integer deathScore, String imageOfHangman, String cu
                  %s
                 """,
             currencyWord,
-            deathScore,
+            deathScore == 0 ? Math.ceilDiv(maxScore, level.mistakeDeathScore()) :
+                Math.ceilDiv(maxScore, level.mistakeDeathScore())
+                    - Math.ceilDiv(deathScore, level().mistakeDeathScore()),
             imageOfHangman
         );
     }

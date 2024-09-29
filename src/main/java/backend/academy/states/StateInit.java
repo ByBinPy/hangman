@@ -7,6 +7,8 @@ public record StateInit(Integer deathScore, String currencyWord, Level level, St
             Это игра в виселицу X)
             Выбери уровень сложности и начинай играть
 
+            Для получения подсказки введи слово help
+
             Уровни сложности
             1 - легкий 2- средний 3 - сложный
 

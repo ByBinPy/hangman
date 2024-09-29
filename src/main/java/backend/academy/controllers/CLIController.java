@@ -1,26 +1,101 @@
 package backend.academy.controllers;
 
+import backend.academy.exceptions.UnimplementedLevelException;
+import backend.academy.repos.StagesRepository;
+import backend.academy.repos.WordsRepository;
+import backend.academy.sevices.GameService;
+import backend.academy.sevices.GuessService;
+
 import java.io.PrintStream;
+import java.security.SecureRandom;
+import java.util.Objects;
+import java.util.Scanner;
 
 public class CLIController {
-    private final static String GameMenu = """
-        Привет!
-        Это игра в виселицу %)
-        Выбери уровень сложности и начинай играть
+    private final GameService gameService;
+    private final Scanner scanner;
+    private final PrintStream output;
 
-        Уровни сложности
-        1 - легкий 2- средний 3 - сложный
+    public CLIController(PrintStream output, Scanner scanner) {
+        this.output = output;
+        this.scanner = scanner;
+        WordsRepository repository = new WordsRepository();
+        this.gameService =
+            new GameService(repository, new GuessService(new StagesRepository(), repository, new SecureRandom()));
+    }
 
-        Сделай выбор нажатием клавиши уровня сложности
+    private void clearConsole() {
+        try {
+            if (System.getProperty("os.name").contains("Windows")) {
+                new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
+            } else {
+                System.out.print("\033[H\033[2J");
+                System.out.flush();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
-        Текущий уровень сложности - 1
-        """;
-    private static PrintStream printer = new PrintStream(System.out);
-    public static void main(String[] args) throws InterruptedException {
-        printer.print(GameMenu);
-        printer.flush();
-        Thread.sleep(4000);
-        printer = new PrintStream(System.out);
-        printer.print("####END###");
+    public void startGame() {
+        while (true) {
+            output.println("Введите ваше имя для начала игры (для выхода наберите 'exit'):");
+            String sessionName = scanner.nextLine();
+            if (Objects.equals(sessionName, "exit")) {
+                break;
+            }
+            try {
+                clearConsole();
+                output.println("Выберите уровень сложности (1-Легкий, 2-Средний, 3-Сложный):");
+                waitConsoleInput();
+                int level = Integer.parseInt(scanner.nextLine()) - 1;
+
+                gameService.createSession(sessionName);
+                gameService.startSession(sessionName, level);
+                playGame(sessionName);
+
+            } catch (UnimplementedLevelException e) {
+                output.println("Выбранный уровень сложности не поддерживается.");
+            } catch (NumberFormatException e) {
+                output.println("Некорректный ввод уровня. Пожалуйста, введите число.");
+            }
+        }
+    }
+
+    private String partingMessage() {
+        return "Спасибо за игру\nДо скорых встреч игр";
+    }
+
+    private void playGame(String sessionName) {
+        while (!gameService.isGameWasEnd(sessionName)) {
+            clearConsole();
+            String currentState = gameService.getGameState(sessionName);
+            output.println(currentState);
+            waitConsoleInput();
+            String input = scanner.nextLine().toLowerCase();
+            if (input.equals("help")) {
+                gameService.getClue(sessionName);
+            } else {
+                if (input.length() != 1 || !Character.isLetter(input.charAt(0))) {
+                    output.println("Введите только одну букву.");
+                    continue;
+                }
+                char guessedLetter = input.charAt(0);
+                gameService.tryGuess(sessionName, guessedLetter);
+            }
+
+        }
+        output.println("Игра завершена!");
+        output.println(gameService.getGameState(sessionName));
+    }
+
+    public void waitConsoleInput() {
+        while (!scanner.hasNextLine()) {
+        }
+    }
+
+    public static void main(String[] args) {
+        CLIController gameController = new CLIController(System.out, new Scanner(System.in));
+        gameController.startGame();
     }
 }

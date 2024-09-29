@@ -11,9 +11,15 @@ import java.util.random.RandomGenerator;
 
 public class GuessService {
 
-    private final StagesRepository _stagesRepository = new StagesRepository();
-    private final WordsRepository _wordsRepository = new WordsRepository();
-    private final RandomGenerator _randomizer = new SecureRandom();
+    private final StagesRepository _stagesRepository;
+    private final WordsRepository _wordsRepository;
+    private final RandomGenerator _randomizer;
+
+    public GuessService(StagesRepository stagesRepository, WordsRepository wordsRepository, RandomGenerator randomizer) {
+        _stagesRepository = stagesRepository;
+        _wordsRepository = wordsRepository;
+        _randomizer = randomizer;
+    }
 
     public String getRandomWordWithLevel(Level level) throws UnimplementedLevelException {
         switch (level) {
@@ -50,7 +56,11 @@ public class GuessService {
     }
 
     public Boolean isLoss(State currentState) {
-        return getMaxScore() > currentState.deathScore() + currentState.level().mistakeDeathScore();
+        return getMaxScore() <= (currentState.deathScore() + currentState.level().mistakeDeathScore());
+    }
+
+    public String getCategory(String word) {
+        return _wordsRepository.getCategory(word);
     }
 
     private Integer getRandomNumberBetweenZeroAnd(Integer last) {
