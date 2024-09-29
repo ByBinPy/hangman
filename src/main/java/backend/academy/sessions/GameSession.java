@@ -22,15 +22,13 @@ public class GameSession implements Session {
         _guessService = guessService;
     }
 
-    public State getCurrentState() {
-        return _state;
-    }
-
-    public GameSession(String word, Set<Character> chars, State state, GuessService guessService) {
-        _word = word;
-        _chars = chars;
+    public GameSession(State state, GuessService guessService) {
         _state = state;
         _guessService = guessService;
+    }
+
+    public State getCurrentState() {
+        return _state;
     }
     @Override
     public State start() throws UnimplementedLevelException {
