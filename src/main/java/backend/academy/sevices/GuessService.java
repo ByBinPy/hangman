@@ -5,7 +5,6 @@ import backend.academy.repos.StagesRepository;
 import backend.academy.repos.WordsRepository;
 import backend.academy.states.Level;
 import backend.academy.states.State;
-import java.security.SecureRandom;
 import java.util.List;
 import java.util.random.RandomGenerator;
 

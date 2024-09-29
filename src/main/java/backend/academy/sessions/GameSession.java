@@ -1,8 +1,6 @@
 package backend.academy.sessions;
 
 import backend.academy.exceptions.UnimplementedLevelException;
-import backend.academy.repos.StagesRepository;
-import backend.academy.repos.WordsRepository;
 import backend.academy.sevices.GuessService;
 import backend.academy.states.Level;
 import backend.academy.states.State;
@@ -11,7 +9,6 @@ import backend.academy.states.StateContinue;
 import backend.academy.states.StateEnd;
 import backend.academy.states.StateInit;
 import backend.academy.states.StateMessageOnClient;
-import java.security.SecureRandom;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -96,8 +93,5 @@ public class GameSession implements Session {
     }
     public String getWordCategory() {
         return _guessService.getCategory(_word);
-    }
-    public String getWord() {
-        return _word;
     }
 }

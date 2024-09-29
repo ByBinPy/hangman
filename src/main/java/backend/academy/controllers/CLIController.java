@@ -5,7 +5,6 @@ import backend.academy.repos.StagesRepository;
 import backend.academy.repos.WordsRepository;
 import backend.academy.sevices.GameService;
 import backend.academy.sevices.GuessService;
-
 import java.io.PrintStream;
 import java.security.SecureRandom;
 import java.util.Objects;
@@ -19,9 +18,8 @@ public class CLIController {
     public CLIController(PrintStream output, Scanner scanner) {
         this.output = output;
         this.scanner = scanner;
-        WordsRepository repository = new WordsRepository();
         this.gameService =
-            new GameService(repository, new GuessService(new StagesRepository(), repository, new SecureRandom()));
+            new GameService(new GuessService(new StagesRepository(), new WordsRepository(), new SecureRandom()));
     }
 
     private void clearConsole() {
@@ -33,7 +31,7 @@ public class CLIController {
                 System.out.flush();
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            output.println("Ошибка очистки отображения на экране");
         }
     }
 
@@ -60,6 +58,7 @@ public class CLIController {
                 output.println("Некорректный ввод уровня. Пожалуйста, введите число.");
             }
         }
+        output.println(partingMessage());
     }
 
     private String partingMessage() {
@@ -91,6 +90,7 @@ public class CLIController {
 
     public void waitConsoleInput() {
         while (!scanner.hasNextLine()) {
+            continue;
         }
     }
 

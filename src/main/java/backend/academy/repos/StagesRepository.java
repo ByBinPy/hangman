@@ -127,7 +127,7 @@ public class StagesRepository {
 
     public String getStage(Integer numberOfStage) {
         if (numberOfStage >= _stages.size()) {
-            return _stages.get(_stages.size() - 1);  // исправлено для получения последней сцены
+            return _stages.getLast();
         }
         return _stages.get(numberOfStage);
     }
