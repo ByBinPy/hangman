@@ -5,6 +5,7 @@ import backend.academy.repos.StagesRepository;
 import backend.academy.repos.WordsRepository;
 import backend.academy.states.Level;
 import backend.academy.states.State;
+import java.security.SecureRandom;
 import java.util.List;
 import java.util.random.RandomGenerator;
 
@@ -14,7 +15,11 @@ public class GuessService {
     private final WordsRepository _wordsRepository;
     private final RandomGenerator _randomizer;
 
-    public GuessService(StagesRepository stagesRepository, WordsRepository wordsRepository, RandomGenerator randomizer) {
+    public GuessService(
+        StagesRepository stagesRepository,
+        WordsRepository wordsRepository,
+        RandomGenerator randomizer
+    ) {
         _stagesRepository = stagesRepository;
         _wordsRepository = wordsRepository;
         _randomizer = randomizer;
@@ -62,7 +67,10 @@ public class GuessService {
         return _wordsRepository.getCategory(word);
     }
 
-    private Integer getRandomNumberBetweenZeroAnd(Integer last) {
-        return _randomizer.nextInt(last - 1);
+    private Integer getRandomNumberBetweenZeroAnd(int bound) {
+        if (bound <= 0) {
+            throw new IllegalArgumentException("bound must be positive");
+        }
+        return _randomizer.nextInt(bound);
     }
 }
