@@ -1,5 +1,6 @@
 package backend.academy.controllers;
 
+import backend.academy.exceptions.InvalidInputGuessData;
 import backend.academy.exceptions.UnimplementedLevelException;
 import backend.academy.repos.StagesRepository;
 import backend.academy.repos.WordsRepository;
@@ -75,12 +76,14 @@ public class CLIController {
             if (input.equals("help")) {
                 gameService.getClue(sessionName);
             } else {
-                if (input.length() != 1 || !Character.isLetter(input.charAt(0))) {
-                    output.println("Введите только одну букву.");
-                    continue;
+                try {
+                    gameService.tryGuess(sessionName, input);
                 }
-                char guessedLetter = input.charAt(0);
-                gameService.tryGuess(sessionName, guessedLetter);
+                catch (InvalidInputGuessData e) {
+                    if (input.length() != 1 || !Character.isLetter(input.charAt(0))) {
+                        output.println("Введите только одну букву.");
+                    }
+                }
             }
 
         }
@@ -90,7 +93,7 @@ public class CLIController {
 
     public void waitConsoleInput() {
         while (!scanner.hasNextLine()) {
-            continue;
+
         }
     }
 

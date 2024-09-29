@@ -1,5 +1,6 @@
 package backend.academy.sevices;
 
+import backend.academy.exceptions.InvalidInputGuessData;
 import backend.academy.exceptions.UnimplementedLevelException;
 import backend.academy.sessions.GameSession;
 import backend.academy.states.Level;
@@ -33,8 +34,10 @@ public class GameService {
     public String getGameState(String partyName) {
         return _gameSessionsCache.getOrDefault(partyName, new GameSession(_guessService)).getCurrentState().getState();
     }
-    public void tryGuess(String partyName, Character character) {
-        _gameSessionsCache.getOrDefault(partyName, new GameSession(_guessService)).guess(character).getState();
+    public void tryGuess(String partyName, String character) throws InvalidInputGuessData {
+        character = character.toLowerCase();
+        if (character.length() > 1) throw new InvalidInputGuessData();
+        _gameSessionsCache.getOrDefault(partyName, new GameSession(_guessService)).guess(character.charAt(0)).getState();
     }
     public void getClue(String partyName) {
         String word = _gameSessionsCache.getOrDefault(partyName, new GameSession(_guessService)).getWordCategory();

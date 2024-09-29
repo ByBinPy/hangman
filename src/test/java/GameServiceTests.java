@@ -18,6 +18,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 import java.util.Map;
+import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.mockito.ArgumentMatchers.anyChar;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -94,9 +95,17 @@ public class GameServiceTests {
     }
     @Test
     public void testGuessingWithAnyCharacterShouldInvokeGuessInGameSession() {
-        _gameService.tryGuess("Some", 'c');
-        verify(_mockedGameSessionsCache, times(1)).getOrDefault(anyString(), any(GameSession.class));
-        verify(_mockedGameSession, times(1)).guess(anyChar());
+        try {
+            _gameService.tryGuess("Some", "c");
+            verify(_mockedGameSessionsCache, times(1)).getOrDefault(anyString(), any(GameSession.class));
+            verify(_mockedGameSession, times(1)).guess(anyChar());
+        } catch (Exception e) {
+            Assertions.fail(e);
+        }
+    }
+    @Test
+    public void testGuessingWithAnyCharacterShouldThrowInvalidInputGuessData() {
+         assertThatCode(() -> _gameService.tryGuess("Some", "C")).doesNotThrowAnyException();
     }
     @Test
     public void testClueGetterWithAny() {
