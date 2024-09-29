@@ -12,6 +12,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
@@ -77,12 +78,8 @@ public class GameServiceTests {
     }
     @Test
     public void testStartWithInvalidLevelNumberShouldBeThrowUnimplementedLevelException() {
-        try {
-            _gameService.startSession("Hello", -1);
-            Assertions.fail("Exception wasn`t invoke with invalid level!!!");
-        } catch (UnimplementedLevelException e) {
-            Assertions.assertTrue(true);
-        }
+        assertThatThrownBy(() ->
+            _gameService.startSession("Hello", -1));
     }
     @Test
     public void testGetGameStateShouldReturnContinueStateString() {
