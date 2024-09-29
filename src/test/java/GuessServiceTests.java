@@ -28,9 +28,9 @@ import static org.mockito.Mockito.when;
 public class GuessServiceTests {
 
     @Mock
-    private StagesRepository _stagesRepository;
+    private StagesRepository _mockedStagesRepository;
     @Mock
-    private WordsRepository _wordRepository;
+    private WordsRepository _mockedWordRepository;
 
     private GuessService _guessService;
 
@@ -39,7 +39,7 @@ public class GuessServiceTests {
     @BeforeEach
     void init() {
         _openMocks = MockitoAnnotations.openMocks(this);
-        _guessService = new GuessService(_stagesRepository, _wordRepository, new SecureRandom());
+        _guessService = new GuessService(_mockedStagesRepository, _mockedWordRepository, new SecureRandom());
 
         Set<String> words = new TreeSet<>();
         words.add("cat");
@@ -47,7 +47,7 @@ public class GuessServiceTests {
         words.add("people");
         words.add("hippopotamus");
 
-        when(_wordRepository.getWords()).thenReturn(words);
+        when(_mockedWordRepository.getWords()).thenReturn(words);
         String thirdStage = """
             _________
             |       |
@@ -66,15 +66,15 @@ public class GuessServiceTests {
             |      / \\
             |_________
             """;
-        when(_stagesRepository.getStage(2)).thenReturn(thirdStage);
+        when(_mockedStagesRepository.getStage(2)).thenReturn(thirdStage);
 
-        when(_stagesRepository.getStage(11)).thenReturn(lastStage);
+        when(_mockedStagesRepository.getStage(11)).thenReturn(lastStage);
 
-        when(_stagesRepository.getStage(13)).thenReturn(lastStage);
+        when(_mockedStagesRepository.getStage(13)).thenReturn(lastStage);
 
-        when(_stagesRepository.getCountStages()).thenReturn(12);
+        when(_mockedStagesRepository.getCountStages()).thenReturn(12);
 
-        when(_wordRepository.getCategory("волк")).thenReturn("не тот кто а тот кто никто");
+        when(_mockedWordRepository.getCategory("волк")).thenReturn("не тот кто а тот кто никто");
     }
 
     @AfterEach
@@ -83,21 +83,33 @@ public class GuessServiceTests {
     }
 
     @Test
-    void testResultGetRandomWordWithLevelForEasyLevelMayLessThen4() throws UnimplementedLevelException {
-        String randomEasyWord = _guessService.getRandomWordWithLevel(Level.EASY);
-        Assertions.assertTrue(randomEasyWord.length() < 4);
+    void testResultGetRandomWordWithLevelForEasyLevelMayLessThen4() {
+        try {
+            String randomEasyWord = _guessService.getRandomWordWithLevel(Level.EASY);
+            Assertions.assertTrue(randomEasyWord.length() < 4);
+        } catch (UnimplementedLevelException e) {
+            Assertions.fail(e);
+        }
     }
 
     @Test
-    void testResultGetRandomWordWithLevelForMediumLevelMayBetween3And6() throws UnimplementedLevelException {
-        String randomMediumWord = _guessService.getRandomWordWithLevel(Level.MEDIUM);
-        Assertions.assertTrue(randomMediumWord.length() > 3 && randomMediumWord.length() < 6);
+    void testResultGetRandomWordWithLevelForMediumLevelMayBetween3And6() {
+        try {
+            String randomMediumWord = _guessService.getRandomWordWithLevel(Level.MEDIUM);
+            Assertions.assertTrue(randomMediumWord.length() > 3 && randomMediumWord.length() < 6);
+        } catch (UnimplementedLevelException e) {
+            Assertions.fail(e);
+        }
     }
 
     @Test
-    void testResultGetRandomWordWithLevelForHardLevelMayGreaterThen5() throws UnimplementedLevelException {
-        String randomHardWord = _guessService.getRandomWordWithLevel(Level.HARD);
-        Assertions.assertTrue(randomHardWord.length() > 5);
+    void testResultGetRandomWordWithLevelForHardLevelMayGreaterThen5() {
+        try {
+            String randomHardWord = _guessService.getRandomWordWithLevel(Level.HARD);
+            Assertions.assertTrue(randomHardWord.length() > 5);
+        } catch (UnimplementedLevelException e) {
+            Assertions.fail(e);
+        }
     }
 
     @Test
@@ -208,6 +220,7 @@ public class GuessServiceTests {
         State nonLooseState = new StateEnd(10, "", "", Level.EASY, "");
         Assertions.assertFalse(_guessService.isLoss(nonLooseState));
     }
+
     @Test
     void testCategoryGetterOnWolfShouldReturnBoyishQuote() {
         Assertions.assertEquals(

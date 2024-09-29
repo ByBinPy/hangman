@@ -27,7 +27,7 @@ public class GameService {
     public void startSession(String partyName, Integer level) throws UnimplementedLevelException {
         GameSession session =
             _gameSessionsCache.computeIfAbsent(partyName, (key) -> _gameSessionsCache.put(key, new GameSession(_guessService)));
-        if (level >= Level.values().length) throw new UnimplementedLevelException(String.format("Не могу начать сессию в уровнем сложности %d", level));
+        if (level < 0 || level >= Level.values().length) throw new UnimplementedLevelException(String.format("Не могу начать сессию в уровнем сложности %d", level));
         if (session != null) session.start(Level.values()[level]);
     }
     public String getGameState(String partyName) {

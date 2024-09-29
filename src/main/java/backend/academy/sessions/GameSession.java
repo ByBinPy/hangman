@@ -14,16 +14,23 @@ import java.util.stream.Collectors;
 
 public class GameSession implements Session {
     private String _word;
+
     private Set<Character> _chars;
     private State _state = new StateInit(0, "", Level.EASY, "");
     private final GuessService _guessService;
-
     public GameSession(GuessService guessService) {
         _guessService = guessService;
     }
 
     public State getCurrentState() {
         return _state;
+    }
+
+    public GameSession(String word, Set<Character> chars, State state, GuessService guessService) {
+        _word = word;
+        _chars = chars;
+        _state = state;
+        _guessService = guessService;
     }
     @Override
     public State start() throws UnimplementedLevelException {
