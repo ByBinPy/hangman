@@ -9,41 +9,56 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class GameService {
-    private final Map<String, GameSession> _gameSessionsCache;
-    private final GuessService _guessService;
+    private final Map<String, GameSession> gameSessionsCache;
+    private final GuessService guessService;
+
     public GameService(GuessService guessService) {
-        _guessService = guessService;
-        _gameSessionsCache = new HashMap<>();
+        this.guessService = guessService;
+        this.gameSessionsCache = new HashMap<>();
     }
+
     public GameService(GuessService guessService, Map<String, GameSession> gameSessionsCache) {
-        _guessService = guessService;
-        _gameSessionsCache = gameSessionsCache;
+        this.guessService = guessService;
+        this.gameSessionsCache = gameSessionsCache;
     }
 
     public void createSession(String partyName) {
-        GameSession session = new GameSession(_guessService);
-        _gameSessionsCache.put(partyName, session);
+        GameSession session = new GameSession(guessService);
+        gameSessionsCache.put(partyName, session);
     }
 
-    public void startSession(String partyName, Integer level) throws UnimplementedLevelException {
+    public void startSession(String partyName, Integer level)
+        throws UnimplementedLevelException {
         GameSession session =
-            _gameSessionsCache.computeIfAbsent(partyName, (key) -> _gameSessionsCache.put(key, new GameSession(_guessService)));
-        if (level < 0 || level >= Level.values().length) throw new UnimplementedLevelException(String.format("Не могу начать сессию в уровнем сложности %d", level));
-        if (session != null) session.start(Level.values()[level]);
+            gameSessionsCache.computeIfAbsent(partyName, (key)
+                -> gameSessionsCache.put(key, new GameSession(guessService)));
+        if (level < 0 || level >= Level.values().length) {
+            throw new UnimplementedLevelException(
+                String.format("Не могу начать сессию в уровнем сложности %d", level));
+        }
+        if (session != null) {
+            session.start(Level.values()[level]);
+        }
     }
+
     public String getGameState(String partyName) {
-        return _gameSessionsCache.getOrDefault(partyName, new GameSession(_guessService)).getCurrentState().getState();
+        return gameSessionsCache.getOrDefault(partyName, new GameSession(guessService)).getCurrentState().getState();
     }
-    public void tryGuess(String partyName, String character) throws InvalidInputGuessData {
-        character = character.toLowerCase();
-        if (character.length() > 1) throw new InvalidInputGuessData();
-        _gameSessionsCache.getOrDefault(partyName, new GameSession(_guessService)).guess(character.charAt(0)).getState();
+
+    public void tryGuess(String partyName, String chars) throws InvalidInputGuessData {
+         String character =  chars.toLowerCase();
+        if (character.length() > 1) {
+            throw new InvalidInputGuessData("Length input greater then 1. Is nor character");
+        }
+        gameSessionsCache.getOrDefault(partyName, new GameSession(guessService)).guess(character.charAt(0)).getState();
     }
+
     public void getClue(String partyName) {
-        String word = _gameSessionsCache.getOrDefault(partyName, new GameSession(_guessService)).getWordCategory();
-        _gameSessionsCache.getOrDefault(partyName, new GameSession(_guessService)).sendMessage(word);
+        String word = gameSessionsCache.getOrDefault(partyName, new GameSession(guessService)).getWordCategory();
+        gameSessionsCache.getOrDefault(partyName, new GameSession(guessService)).sendMessage(word);
     }
+
     public boolean isGameWasEnd(String partyName) {
-        return _gameSessionsCache.get(partyName).getCurrentState() instanceof StateEnd;
+        return gameSessionsCache.get(partyName).getCurrentState() instanceof StateEnd;
     }
 }

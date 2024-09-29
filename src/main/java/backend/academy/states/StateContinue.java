@@ -12,8 +12,8 @@ public record StateContinue(Integer deathScore, String imageOfHangman, String cu
                  %s
                 """,
             currencyWord,
-            deathScore == 0 ? Math.ceilDiv(maxScore, level.mistakeDeathScore()) :
-                Math.ceilDiv(maxScore, level.mistakeDeathScore())
+            deathScore == 0 ? Math.ceilDiv(maxScore, level.mistakeDeathScore())
+                : Math.ceilDiv(maxScore, level.mistakeDeathScore())
                     - Math.ceilDiv(deathScore, level().mistakeDeathScore()),
             imageOfHangman
         );

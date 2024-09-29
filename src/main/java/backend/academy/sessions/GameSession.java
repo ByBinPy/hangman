@@ -13,90 +13,90 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 public class GameSession implements Session {
-    private String _word;
+    private static final int COUNT_UNDERLINES_FOR_DEFAULT_SHOW = 10;
+    private String word;
+    private Set<Character> chars;
+    private State state = new StateInit(0, "", Level.EASY, "");
+    private final GuessService guessService;
 
-    private Set<Character> _chars;
-    private State _state = new StateInit(0, "", Level.EASY, "");
-    private final GuessService _guessService;
     public GameSession(GuessService guessService) {
-        _guessService = guessService;
+        this.guessService = guessService;
     }
 
     public GameSession(State state, GuessService guessService) {
-        _state = state;
-        _guessService = guessService;
+        this.state = state;
+        this.guessService = guessService;
     }
 
     public State getCurrentState() {
-        return _state;
+        return state;
     }
+
     @Override
     public State start() throws UnimplementedLevelException {
         Level defaultLevel = Level.EASY;
-        _word = _guessService.getRandomWordWithLevel(defaultLevel);
-        _chars = _word.chars().mapToObj(ch -> (char) ch).collect(Collectors.toSet());
-        _state = new StateBegin(0, "_ ".repeat(_word.length()), defaultLevel, "-".repeat(10));
-        return _state;
+        word = guessService.getRandomWordWithLevel(defaultLevel);
+        chars =
+            word.chars().mapToObj(ch -> (char) ch).collect(Collectors.toSet());
+        state = new StateBegin(
+            0, " ".repeat(word.length()), defaultLevel, "-".repeat(COUNT_UNDERLINES_FOR_DEFAULT_SHOW));
+        return state;
     }
 
     @Override
     public State start(Level level) throws UnimplementedLevelException {
-        _word = _guessService.getRandomWordWithLevel(level);
-        _chars = _word.chars().mapToObj(ch -> (char) ch).collect(Collectors.toSet());
-        _state = new StateBegin(0, "_ ".repeat(_word.length()), level, "-".repeat(10));
-        return _state;
+        word = guessService.getRandomWordWithLevel(level);
+        chars =
+            word.chars().mapToObj(ch -> (char) ch).collect(Collectors.toSet());
+        state =
+            new StateBegin(0, " ".repeat(word.length()), level, "-".repeat(COUNT_UNDERLINES_FOR_DEFAULT_SHOW));
+        return state;
     }
 
     @Override
     public State sendMessage(String message) {
-        _state = new StateMessageOnClient(_state.deathScore(), _state.currencyWord(), _state.level(), _guessService.getCurrStage(_state),  message);
-        return _state;
+        state =
+            new StateMessageOnClient(state.deathScore(), state.currencyWord(),
+                state.level(), guessService.getCurrStage(state), message);
+        return state;
     }
+
     @Override
     public State guess(Character letter) {
-        if (_chars.contains(letter)) {
-            String currencyWord = _state.currencyWord();
-            StringBuilder nextWordState = new StringBuilder(_word.length());
-            for (int i = 0; i < currencyWord.length(); i+=2) {
-                if ('а' < currencyWord.charAt(i) && currencyWord.charAt(i) < 'я') nextWordState.append(currencyWord.charAt(i)).append(' ');
-                else nextWordState.append(_word.charAt(i/2) == letter ? letter : '_').append(' ');
+        if (chars.contains(letter)) {
+            String currencyWord = state.currencyWord();
+            StringBuilder nextWordState = new StringBuilder(word.length());
+            for (int i = 0; i < currencyWord.length(); i += 2) {
+                if ('а' < currencyWord.charAt(i) && currencyWord.charAt(i) < 'я') {
+                    nextWordState.append(currencyWord.charAt(i)).append(' ');
+                } else {
+                    nextWordState.append(word.charAt(i / 2) == letter ? letter : '_')
+                        .append(' ');
+                }
             }
             String nextWord = nextWordState.toString();
 
-            _state =  nextWord.contains("_")
-                ? new StateContinue(
-                _state.deathScore(),
-                _guessService.getCurrStage(_state),
-                nextWord,
-                _state.level(),
-                _guessService.getMaxScore())
-                : new StateEnd(
-                _state.deathScore(),
-                _guessService.getCurrStage(_state),
-                _word,
-                _state.level(),
-                "Ура!!!\nВы угадали слово"
-            );
+            state = nextWord.contains("_")
+                ? new StateContinue(state.deathScore(),
+                guessService.getCurrStage(state), nextWord, state.level(),
+                guessService.getMaxScore())
+                : new StateEnd(state.deathScore(),
+                guessService.getCurrStage(state), word, state.level(),
+                "Ура!!!\nВы угадали слово");
         } else {
-            _state = _guessService.isLoss(_state)
-                ? new StateEnd(
-                _state.deathScore(),
-                _guessService.getNextStage(_state),
-                _word,
-                _state.level(),
-                "Вы проиграли(\nВыберите более простой уровень"
-            )
+            state = guessService.isLoss(state)
+                ? new StateEnd(state.deathScore(),
+                guessService.getNextStage(state), word, state.level(),
+                "Вы проиграли(\nВыберите более простой уровень")
                 : new StateContinue(
-                _state.deathScore() + _state.level().mistakeDeathScore(),
-                _guessService.getNextStage(_state),
-                _state.currencyWord(),
-                _state.level(),
-                _guessService.getMaxScore()
-            );
+                state.deathScore() + state.level().mistakeDeathScore(),
+                guessService.getNextStage(state), state.currencyWord(),
+                state.level(), guessService.getMaxScore());
         }
-        return _state;
+        return state;
     }
+
     public String getWordCategory() {
-        return _guessService.getCategory(_word);
+        return guessService.getCategory(word);
     }
 }

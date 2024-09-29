@@ -1,6 +1,11 @@
 package backend.academy.states;
 
-public record StateMessageOnClient(Integer deathScore, String currencyWord, Level level, String imageOfHangman, String message) implements State{
+public record StateMessageOnClient(
+    Integer deathScore,
+    String currencyWord,
+    Level level,
+    String imageOfHangman,
+    String message) implements State {
 
     @Override
     public String getState() {

@@ -24,7 +24,6 @@ import static org.assertj.core.api.Assertions.in;
 import static org.assertj.core.api.Assertions.not;
 import static org.assertj.core.api.Assertions.notIn;
 import static org.assertj.core.api.AssertionsForClassTypes.catchThrowable;
-import static org.assertj.core.api.InstanceOfAssertFactories.DURATION;
 
 /**
  * AssertJ is a Java library that provides a rich set of assertions

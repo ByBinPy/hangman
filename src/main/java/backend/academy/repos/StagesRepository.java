@@ -4,135 +4,138 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class StagesRepository {
-    private final List<String> _stages = new ArrayList<>() {{
-        add("""
-            _________
-            |       |
-            |
-            |
-            |
-            |
-            |_________
-            """);
+    @SuppressWarnings({"AnonInnerLength", "MultipleStringLiterals"})
+    private final List<String> stages = new ArrayList<>() {
+        {
+            add("""
 
-        add("""
-            _________
-            |       |
-            |       O
-            |
-            |
-            |
-            |_________
-            """);
+                |       |
+                |
+                |
+                |
+                |
+                |
+                """);
 
-        add("""
-            _________
-            |       |
-            |       O
-            |       |
-            |
-            |
-            |_________
-            """);
+            add("""
 
-        add("""
-            _________
-            |       |
-            |       O
-            |      /|
-            |
-            |
-            |_________
-            """);
+                |       |
+                |       O
+                |
+                |
+                |
+                |
+                """);
 
-        add("""
-            _________
-            |       |
-            |       O
-            |      /|\\
-            |
-            |
-            |_________
-            """);
+            add("""
 
-        add("""
-            _________
-            |       |
-            |       O
-            |      /|\\
-            |      /
-            |
-            |_________
-            """);
+                |       |
+                |       O
+                |       |
+                |
+                |
+                |
+                """);
 
-        add("""
-            _________
-            |       |
-            |       O
-            |      /|\\
-            |      / \\
-            |
-            |_________
-            """);
+            add("""
 
-        add("""
-            _________
-            |       |
-            |       O
-            |     --|--
-            |      / \\
-            |
-            |_________
-            """);
+                |       |
+                |       O
+                |      /|
+                |
+                |
+                |
+                """);
 
-        add("""
-            _________
-            |       |
-            |       O
-            |     --|--
-            |      / \\
-            |
-            |_________
-            """);
+            add("""
 
-        add("""
-            _________
-            |       |
-            |       O
-            |     --|--
-            |      / \\
-            |_________
-            """);
+                |       |
+                |       O
+                |      /|\\
+                |
+                |
+                |
+                """);
 
-        add("""
-            _________
-            |       |
-            |       |
-            |       O
-            |     --|--
-            |      / \\
-            |_________
-            """);
+            add("""
 
-        add("""
-            _________
-            |       |
-            |       |
-            |     (X X)
-            |     --|--
-            |      / \\
-            |_________
-            """);
-    }};
+                |       |
+                |       O
+                |      /|\\
+                |      /
+                |
+                |
+                """);
+
+            add("""
+
+                |       |
+                |       O
+                |      /|\\
+                |      / \\
+                |
+                |
+                """);
+
+            add("""
+
+                |       |
+                |       O
+                |     --|--
+                |      / \\
+                |
+                |
+                """);
+
+            add("""
+
+                |       |
+                |       O
+                |     --|--
+                |      / \\
+                |
+                |
+                """);
+
+            add("""
+
+                |       |
+                |       O
+                |     --|--
+                |      / \\
+                |
+                """);
+
+            add("""
+
+                |       |
+                |       |
+                |       O
+                |     --|--
+                |      / \\
+                |
+                """);
+
+            add("""
+
+                |       |
+                |       |
+                |     (X X)
+                |     --|--
+                |      / \\
+                |
+                """);
+        }
+    };
 
     public String getStage(Integer numberOfStage) {
-        if (numberOfStage >= _stages.size()) {
-            return _stages.getLast();
+        if (numberOfStage >= stages.size()) {
+            return stages.getLast();
         }
-        return _stages.get(numberOfStage);
+        return stages.get(numberOfStage);
     }
 
     public Integer getCountStages() {
-        return _stages.size();
+        return stages.size();
     }
 }

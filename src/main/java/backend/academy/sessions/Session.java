@@ -6,7 +6,10 @@ import backend.academy.states.State;
 
 public interface Session {
     State start() throws UnimplementedLevelException;
+
     State start(Level level) throws UnimplementedLevelException;
+
     State guess(Character letter);
+
     State sendMessage(String message);
 }
