@@ -29,7 +29,7 @@ public class GuessService {
         switch (level) {
             case EASY -> {
                 List<String> easyWords =
-                    wordsRepository.getWords().stream().filter(word -> word.length() < MAX_LEN_FOR_EASY_WORD).toList();
+                    wordsRepository.getWords().stream().filter(word -> word.length() <= MAX_LEN_FOR_EASY_WORD).toList();
                 return easyWords.get(getRandomNumberBetweenZeroAnd(easyWords.size()));
             }
             case MEDIUM -> {
@@ -71,7 +71,7 @@ public class GuessService {
     }
 
     private Integer getRandomNumberBetweenZeroAnd(int bound) {
-        if (bound <= 0) {
+        if (bound < 0) {
             throw new IllegalArgumentException("bound must be positive");
         }
         return randomizer.nextInt(bound);

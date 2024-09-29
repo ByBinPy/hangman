@@ -49,8 +49,8 @@ public class CLIController {
                 clearConsole();
                 output.println(
                     "Выберите уровень сложности (1-Легкий, 2-Средний, 3-Сложный):");
-                waitConsoleInput();
-                int level = Integer.parseInt(scanner.nextLine()) - 1;
+                String levelNumberInString = scanner.nextLine();
+                int level = Integer.parseInt(levelNumberInString) - 1;
 
                 gameService.createSession(sessionName);
                 gameService.startSession(sessionName, level);
@@ -74,8 +74,11 @@ public class CLIController {
             clearConsole();
             String currentState = gameService.getGameState(sessionName);
             output.println(currentState);
-            waitConsoleInput();
             String input = scanner.nextLine().toLowerCase();
+            if (input.isEmpty()) {
+                output.println("Введите символ");
+                continue;
+            }
             if (input.equals("help")) {
                 gameService.getClue(sessionName);
             } else {
@@ -90,11 +93,6 @@ public class CLIController {
         }
         output.println("Игра завершена!");
         output.println(gameService.getGameState(sessionName));
-    }
-
-    public void waitConsoleInput() {
-        while (!scanner.hasNextLine()) {
-        }
     }
 
     public static void main(String[] args) {

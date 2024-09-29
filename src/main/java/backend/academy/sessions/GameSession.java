@@ -13,7 +13,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 public class GameSession implements Session {
-    private static final int COUNT_UNDERLINES_FOR_DEFAULT_SHOW = 10;
+    private static final int COUNT_UNDERLINES_FOR_DEFAULT_DRAWING_STAGE = 10;
     private String word;
     private Set<Character> chars;
     private State state = new StateInit(0, "", Level.EASY, "");
@@ -39,7 +39,7 @@ public class GameSession implements Session {
         chars =
             word.chars().mapToObj(ch -> (char) ch).collect(Collectors.toSet());
         state = new StateBegin(
-            0, " ".repeat(word.length()), defaultLevel, "-".repeat(COUNT_UNDERLINES_FOR_DEFAULT_SHOW));
+            0, "_ ".repeat(word.length()), defaultLevel, "-".repeat(COUNT_UNDERLINES_FOR_DEFAULT_DRAWING_STAGE));
         return state;
     }
 
@@ -49,7 +49,10 @@ public class GameSession implements Session {
         chars =
             word.chars().mapToObj(ch -> (char) ch).collect(Collectors.toSet());
         state =
-            new StateBegin(0, " ".repeat(word.length()), level, "-".repeat(COUNT_UNDERLINES_FOR_DEFAULT_SHOW));
+            new StateBegin(0,
+                "_ ".repeat(word.length()),
+                level,
+                "-".repeat(COUNT_UNDERLINES_FOR_DEFAULT_DRAWING_STAGE));
         return state;
     }
 
