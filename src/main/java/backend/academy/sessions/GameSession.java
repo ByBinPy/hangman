@@ -64,6 +64,7 @@ public class GameSession implements Session {
         return state;
     }
 
+
     @Override
     public State guess(Character letter) {
         if (chars.contains(letter)) {
